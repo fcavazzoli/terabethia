@@ -9,8 +9,8 @@ use crate::common::types::{
 };
 
 pub const TERA_ADDRESS: &str = "timop-6qaaa-aaaab-qaeea-cai";
-pub const MAGIC_ADDRESS_IC: &str = "7z6fu-giaaa-aaaab-qafkq-cai";
-pub const ERC20_ADDRESS_ETH: &str = "0x15b661f6d3fd9a7ed8ed4c88bccfd1546644443f";
+pub const WETH_ADDRESS_IC: &str = "tgodh-faaaa-aaaab-qaefa-cai";
+pub const WETH_ADDRESS_ETH: &str = "0x2e130e57021bb4dfb95eb4dd0dd8cfceb936148a";
 
 thread_local! {
     pub static STATE: ProxyState = ProxyState::default();
@@ -84,21 +84,6 @@ impl ProxyState {
         return;
     }
 
-    pub fn remove_claimable_message(
-        &self,
-        eth_address: EthereumAddr,
-        msg_hash: MsgHashKey,
-    ) -> Result<(), String> {
-        let mut map = self.messages_unclaimed.borrow_mut();
-        let messages = map
-            .get_mut(&eth_address)
-            .ok_or_else(|| "Message not found")?;
-
-        messages.retain(|m| m.msg_hash != msg_hash);
-
-        return Ok(());
-    }
-
     pub fn get_claimable_messages(&self, eth_address: EthereumAddr) -> Vec<ClaimableMessage> {
         let unclaimed_messages = self
             .messages_unclaimed
@@ -107,6 +92,21 @@ impl ProxyState {
             .unwrap_or(&vec![])
             .clone();
         return unclaimed_messages;
+    }
+
+    pub fn remove_claimable_message(
+        &self,
+        eth_address: EthereumAddr,
+        msg_hash: MsgHashKey,
+    ) -> Result<(), String> {
+        let mut map = self.messages_unclaimed.borrow_mut();
+        let messages = map
+            .get_mut(&eth_address)
+            .ok_or_else(|| "Eth address not found")?;
+
+        messages.retain(|m| m.msg_hash != msg_hash);
+
+        return Ok(());
     }
 
     pub fn authorize(&self, other: Principal) {
@@ -397,7 +397,7 @@ mod tests {
 
         let erc20_addr_pid = Principal::from_slice(&hex::decode(erc20_addr_hex).unwrap());
 
-        let _erc20_addr_hex = hex::encode(
+        let erc20_addr_hex = hex::encode(
             Principal::from_text("6iiev-lyvwz-q7nu7-5tj7n-r3kmr-c6m7u-kumzc-eipy").unwrap(),
         );
 

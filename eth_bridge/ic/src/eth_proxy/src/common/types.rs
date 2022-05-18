@@ -16,10 +16,16 @@ pub type MsgHashKey = [u8; 32];
 
 pub type TxReceipt = Result<Nat, TxError>;
 
-pub type MagicResponse = Result<Principal, FactoryError>;
-
 #[derive(Serialize, CandidType, Deserialize)]
 pub struct Message;
+
+#[derive(CandidType, Deserialize, Clone, Debug)]
+pub struct ClaimableMessage {
+    pub owner: EthereumAddr,
+    pub msg_hash: MsgHashKey,
+    pub token: TokendId,
+    pub amount: Nat,
+}
 
 #[derive(CandidType, Deserialize, Debug)]
 pub enum FactoryError {
@@ -55,14 +61,6 @@ pub struct OutgoingMessageHashParams {
 pub struct OutgoingMessage {
     pub msg_key: [u8; 32],
     pub msg_hash: String,
-}
-
-#[derive(CandidType, Deserialize, Clone, Debug)]
-pub struct ClaimableMessage {
-    pub owner: EthereumAddr,
-    pub msg_hash: MsgHashKey,
-    pub token: TokendId,
-    pub amount: Nat,
 }
 
 #[derive(CandidType, Deserialize, Default)]
