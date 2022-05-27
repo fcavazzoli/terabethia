@@ -28,12 +28,15 @@ const publicKey = Secp256k1PublicKey.fromRaw(Buffer.from(envs.KMS_PUBLIC_KEY, 'b
 // const identity = new KMSIdentity(publicKey, kms, envs.KMS_KEY_ID);
 // const eth_proxy = new EthProxy(envs.ETH_PROXY_CANISTER_ID, identity);
 
+
+// asdf
+//
 export const handleWithdraw = async (message: BlockNativePayload) => {
   if (message.status !== 'confirmed') {
     throw new Error('transaction is not confirmed yet');
   }
-
   const { hash } = message;
+  console.log(hash)
   const { params: payload } = message.contractCall;
 
   // we get the tx receipt 

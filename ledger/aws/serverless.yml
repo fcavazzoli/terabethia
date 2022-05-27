@@ -11,61 +11,56 @@ provider:
     DEBUG: "*"
     AWS_STAGE: ${self:provider.stage}
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "sqs:SendMessage"
+          Resource:
+            - !GetAtt
+              - EthereumTxWithdrawQueue
+              - Arn
 
 custom:
   stagePrefix:
-    dev: ClaimableTestnet
-    prd: ClaimableMainnet
-    local: ClaimableLocal
+    dev: ClaimablesTestnet
+    prd: ClaimablesMainnet
+    local: ClaimablesLocal
 
   resourcePrefix: ${self:custom.stagePrefix.${self:provider.stage}}
-
   # stack termination protection
+
   serverlessTerminationProtection:
     stages:
       - prd
       - dev
+
+  # serverless-iam-roles-per-function:
+  #   defaultInherit: true
+
   domain:
     dev: ledger-dev.psychedelic.ooo
     prd: ledger.psychedelic.ooo
 
-  # ToDo {botch} confirm domains
-  # customDomain:
-  #   domainName: ${self:custom.domain.${opt:stage, 'dev'}}
-  #   stage: ${self:provider.stage}
-  #   basePath: ''
-  #   autoDomain: true
-  #   certificateName: '*.psychedelic.ooo'
-  #   createRoute53Record: false
   serverless-offline-sns:
-  port: 4002
-  debug: false
-  sns-endpoint: http://127.0.0.1:4002
+    port: 4002
+    debug: false
+    sns-endpoint: http://127.0.0.1:4002
+
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
     packager: yarn
-  serverless-iam-roles-per-function:
-    defaultInherit: true # Each function will inherit the service level roles too.
+
   prune:
     automatic: true
     number: 3
-  serverless-offline:
-    httpPort: 3000
-    stageVariables:
-      ETHEREUM_PROVIDER_URL: ${env:ETHEREUM_PROVIDER_URL}
-      CANISTER_ID: ${env:CANISTER_ID}
-      QUEUE_URL: ${env:QUEUE_URL}
-      ETHEREUM_CONTRACT: ${env:ETHEREUM_CONTRACT}
-      KMS_KEY_ID: ${env:KMS_KEY_ID}
-      KMS_KEY_KEY: ${env:KMS_PUBLIC_KEY}
-      STAGE: ${env:STAGE}
-      AWS_STAGE: ${env:AWS_STAGE}
 
 plugins:
   - serverless-webpack
   - serverless-stack-termination-protection
-  - serverless-iam-roles-per-function
+  # - serverless-iam-roles-per-function
   - serverless-prune-plugin
   - serverless-offline-sns
   - serverless-offline
@@ -92,47 +87,7 @@ functions:
             schema:
               application/json: ${file(src/functions/ethereum/schema_json.json)}
     # allow sending messages to EthereumTxWithdrawQueue
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "sqs:SendMessage"
-        Resource:
-          - !GetAtt
-            - EthereumTxWithdrawQueue
-            - Arn
-  # ! do not rename !
-  RemoveClaimable:
-    timeout: 120
-    memorySize: 128
-    handler: src/functions/ethereum/remove.main
-    reservedConcurrency: 1
-    environment:
-      # Ethereum Provider API URL (only for querying L1 state)
-      ETHEREUM_PROVIDER_URL: ${ssm:${self:custom.resourcePrefix}EthereumProviderUrl}
-      # ETHEREUM_PROVIDER_URL: ${ssm:${self:custom.resourcePrefix}EthereumProviderUrl~true}
-      # AWS KMS Key ID, IC Operator
-      # KMS_KEY_ID: !Ref InternetComputerOperator
-      # AWS KMS Public Key (base64 encoded), IC Operator
-      KMS_PUBLIC_KEY: ${ssm:${self:custom.resourcePrefix}KMSPublicKeyIC}
-      # Terabethia L1 Contract ID
-      # EthProxy Canister ID
-      ETH_PROXY_CANISTER_ID: ${ssm:${self:custom.resourcePrefix}EthProxyCanisterId}
-      QUEUE_URL: !Ref EthereumTxWithdrawQueue
-    events:
-      - sqs:
-          arn: !GetAtt
-            - EthereumTxWithdrawQueue
-            - Arn
-          batchSize: 10
-    iamRoleStatements:
-      # allow removing processed messages from queue
-      - Effect: "Allow"
-        Action:
-          - "sqs:DeleteMessage"
-        Resource:
-          - !GetAtt
-            - EthereumTxWithdrawQueue
-            - Arn
+
 resources:
   Resources:
     #
@@ -146,14 +101,8 @@ resources:
         FifoQueue: true
         DelaySeconds: 30
         VisibilityTimeout: 300 # 5 minutes
-        RedrivePolicy:
-          maxReceiveCount: 3
-          deadLetterTargetArn: !GetAtt
-            - EthereumTxWithdrawDLQ
-            - Arn
-    EthereumTxWithdrawDLQ:
-      Type: AWS::SQS::Queue
-      Properties:
-        FifoQueue: true
-        QueueName: ${self:custom.resourcePrefix}EthereumTxWithdrawDLQ-dev-west-2.fifo
-        MessageRetentionPeriod: 1209600 # 14 days
+        # RedrivePolicy:
+        #   maxReceiveCount: 3
+        #   deadLetterTargetArn: !GetAtt
+        #     - EthereumTxWithdrawDLQ
+        #     - Arn

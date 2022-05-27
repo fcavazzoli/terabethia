@@ -10,21 +10,12 @@ import {
   SQSClient,
   SendMessageCommand,
 } from '@aws-sdk/client-sqs';
-import schema from './schema';
+import schema from './schema_json.json';
 import { env } from 'process';
 
-const envs = requireEnv(['QUEUE_URL',
-  'REGION',
-  'AWS_KEY_ID',
-  'AWS_ACCESS_KEY']);
+const envs = requireEnv(['QUEUE_URL']);
 
-const sqsClient = new SQSClient({
-  region: envs.REGION,
-  credentials: {
-    accessKeyId: envs.AWS_KEY_ID,
-    secretAccessKey: envs.AWS_ACCESS_KEY
-  }
-});
+const sqsClient = new SQSClient({});
 
 export const blockNativeEventHook: ValidatedEventAPIGatewayProxyEvent<
   typeof schema
@@ -37,11 +28,11 @@ export const blockNativeEventHook: ValidatedEventAPIGatewayProxyEvent<
   }
 
   try {
-    console.log(envs.QUEUE_URL)
+    console.log('queue', envs.QUEUE_URL)
     await sqsClient.send(new SendMessageCommand({
       QueueUrl: envs.QUEUE_URL,
       MessageBody: JSON.stringify(event.body),
-      MessageDeduplicationId: event.body,
+      MessageDeduplicationId: event.body.hash,
       MessageGroupId: 'ethereum',
     }));
 
