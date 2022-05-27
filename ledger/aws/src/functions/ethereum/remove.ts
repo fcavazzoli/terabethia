@@ -4,15 +4,15 @@ import { ethers } from 'ethers';
 import { EthProxy, KMSIdentity } from '@/libs/dfinity';
 import { Principal } from '@dfinity/principal';
 import { BlockNativePayload } from '@/libs/blocknative';
-import { sqsHandler } from '@/libs/utils';
+import { requireEnv, sqsHandler } from '@/libs/utils';
 
 import payload from './mock.json';
-import { KMSClient } from '@aws-sdk/client-kms';
+// import { KMSClient } from '@aws-sdk/client-kms';
 import { Secp256k1PublicKey } from '@dfinity/identity';
 
 const envs = requireEnv([
   'ETHEREUM_PROVIDER_URL',
-  'CANISTER_ID',
+  'ETH_PROXY_CANISTER_ID',
   'QUEUE_URL',
   'ETHEREUM_CONTRACT',
   'KMS_KEY_ID',
@@ -23,10 +23,10 @@ const envs = requireEnv([
 const provider = new ethers.providers.StaticJsonRpcProvider(envs.ETHEREUM_PROVIDER_URL);
 
 // EthProxy IC with KMS
-const kms = new KMSClient({});
+// const kms = new KMSClient({});
 const publicKey = Secp256k1PublicKey.fromRaw(Buffer.from(envs.KMS_PUBLIC_KEY, 'base64'));
-const identity = new KMSIdentity(publicKey, kms, envs.KMS_KEY_ID);
-const eth_proxy = new EthProxy(envs.ETH_PROXY_CANISTER_ID, identity);
+// const identity = new KMSIdentity(publicKey, kms, envs.KMS_KEY_ID);
+// const eth_proxy = new EthProxy(envs.ETH_PROXY_CANISTER_ID, identity);
 
 export const handleWithdraw = async (message: BlockNativePayload) => {
   if (message.status !== 'confirmed') {
@@ -60,8 +60,8 @@ export const handleWithdraw = async (message: BlockNativePayload) => {
 
 
   // send message to the proxy
-  await eth_proxy.removeClaimable(fromAddresPid, amountAsNat);
+  // await eth_proxy.removeClaimable(fromAddresPid, amountAsNat);
 };
 
-export const main = sqsHandler<BlockNativePayload>(handleWithdraw, QUEUE_URL, undefined, 1);
+export const main = sqsHandler<BlockNativePayload>(handleWithdraw, envs.QUEUE_URL, undefined, 1);
 

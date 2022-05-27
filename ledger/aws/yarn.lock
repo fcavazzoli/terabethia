@@ -81,45 +81,6 @@
     "@aws-sdk/types" "3.78.0"
     tslib "^2.3.1"
 
-"@aws-sdk/client-kms@^3.49.0":
-  version "3.99.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-kms/-/client-kms-3.99.0.tgz#bf9e1025b915b5d980ee36e564f1d1d1465d10a0"
-  integrity sha512-zyXoBX0KGlbw5mpaHiJ45bBCBy/Wo75fPWTM9WYByMfqFvkl3wQroKGyfDJBy0O3QFpWnKHLU9CqkVhDxbUBgA==
-  dependencies:
-    "@aws-crypto/sha256-browser" "2.0.0"
-    "@aws-crypto/sha256-js" "2.0.0"
-    "@aws-sdk/client-sts" "3.99.0"
-    "@aws-sdk/config-resolver" "3.80.0"
-    "@aws-sdk/credential-provider-node" "3.99.0"
-    "@aws-sdk/fetch-http-handler" "3.78.0"
-    "@aws-sdk/hash-node" "3.78.0"
-    "@aws-sdk/invalid-dependency" "3.78.0"
-    "@aws-sdk/middleware-content-length" "3.78.0"
-    "@aws-sdk/middleware-host-header" "3.78.0"
-    "@aws-sdk/middleware-logger" "3.78.0"
-    "@aws-sdk/middleware-retry" "3.80.0"
-    "@aws-sdk/middleware-serde" "3.78.0"
-    "@aws-sdk/middleware-signing" "3.78.0"
-    "@aws-sdk/middleware-stack" "3.78.0"
-    "@aws-sdk/middleware-user-agent" "3.78.0"
-    "@aws-sdk/node-config-provider" "3.80.0"
-    "@aws-sdk/node-http-handler" "3.94.0"
-    "@aws-sdk/protocol-http" "3.78.0"
-    "@aws-sdk/smithy-client" "3.99.0"
-    "@aws-sdk/types" "3.78.0"
-    "@aws-sdk/url-parser" "3.78.0"
-    "@aws-sdk/util-base64-browser" "3.58.0"
-    "@aws-sdk/util-base64-node" "3.55.0"
-    "@aws-sdk/util-body-length-browser" "3.55.0"
-    "@aws-sdk/util-body-length-node" "3.55.0"
-    "@aws-sdk/util-defaults-mode-browser" "3.99.0"
-    "@aws-sdk/util-defaults-mode-node" "3.99.0"
-    "@aws-sdk/util-user-agent-browser" "3.78.0"
-    "@aws-sdk/util-user-agent-node" "3.80.0"
-    "@aws-sdk/util-utf8-browser" "3.55.0"
-    "@aws-sdk/util-utf8-node" "3.55.0"
-    tslib "^2.3.1"
-
 "@aws-sdk/client-secrets-manager@^3.49.0":
   version "3.99.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-secrets-manager/-/client-secrets-manager-3.99.0.tgz#94d3dab15a7fc258703b441d87d88d5dd5fd0123"
@@ -447,14 +408,6 @@
   dependencies:
     tslib "^2.3.1"
 
-"@aws-sdk/lib-dynamodb@^3.42.0":
-  version "3.99.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/lib-dynamodb/-/lib-dynamodb-3.99.0.tgz#4a1018a0eb745beafc0de8c0d37f9fb39a036012"
-  integrity sha512-KpirlShxJZvD6HBUiAQoxehAC33b48lUsqWExbwJZ0Pc2dFrK+cTn+32t3DTwiBeI8oK7JyFvHPKSpeyWS79fA==
-  dependencies:
-    "@aws-sdk/util-dynamodb" "3.99.0"
-    tslib "^2.3.1"
-
 "@aws-sdk/md5-js@3.78.0":
   version "3.78.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/md5-js/-/md5-js-3.78.0.tgz#a79357e6518778057b7bcbbd45dcb352be5f8e15"
@@ -724,13 +677,6 @@
     "@aws-sdk/node-config-provider" "3.80.0"
     "@aws-sdk/property-provider" "3.78.0"
     "@aws-sdk/types" "3.78.0"
-    tslib "^2.3.1"
-
-"@aws-sdk/util-dynamodb@3.99.0", "@aws-sdk/util-dynamodb@^3.42.0":
-  version "3.99.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/util-dynamodb/-/util-dynamodb-3.99.0.tgz#2173098f50a21bc11f79e4b0f653e4023b6d76b6"
-  integrity sha512-AP95i8d7w41FEBG9VV/5Wbq4YtVL+XfEKRUOauCvCkx18tY7E0TkeHxWu0G7ITH3tuOspaHQBBdidr7F95WZtA==
-  dependencies:
     tslib "^2.3.1"
 
 "@aws-sdk/util-hex-encoding@3.58.0":

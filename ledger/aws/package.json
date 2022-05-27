@@ -20,12 +20,9 @@
     "node": ">=14.15.0"
   },
   "dependencies": {
-    "@aws-sdk/client-kms": "^3.49.0",
     "@aws-sdk/client-secrets-manager": "^3.49.0",
     "@aws-sdk/client-sns": "^3.42.0",
     "@aws-sdk/client-sqs": "^3.42.0",
-    "@aws-sdk/lib-dynamodb": "^3.42.0",
-    "@aws-sdk/util-dynamodb": "^3.42.0",
     "@dfinity/agent": "^0.10.1",
     "@dfinity/candid": "^0.10.1",
     "@dfinity/identity": "^0.10.1",

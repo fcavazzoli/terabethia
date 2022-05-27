@@ -1,8 +1,7 @@
-service: ledger
+service: claimables
 
 provider:
   name: aws
-  profile: ledger
   runtime: nodejs14.x
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-west-2'}
@@ -15,9 +14,9 @@ provider:
 
 custom:
   stagePrefix:
-    dev: LedgerTestnet
-    prd: LedgerMainnet
-    local: LedgerLocal
+    dev: ClaimableTestnet
+    prd: ClaimableMainnet
+    local: ClaimableLocal
 
   resourcePrefix: ${self:custom.stagePrefix.${self:provider.stage}}
 
@@ -54,14 +53,14 @@ custom:
   serverless-offline:
     httpPort: 3000
     stageVariables:
-      ethereum_provider_url: ${env:ETHEREUM_PROVIDER_URL}
-      canister_id: ${env:CANISTER_ID}
-      queue_url: ${env:QUEUE_URL}
-      ethereum_contract: ${env:ETHEREUM_CONTRACT}
-      kms_key_id: ${env:KMS_KEY_ID}
-      kms_key_key: ${env:KMS_PUBLIC_KEY}
-      stage: ${env:STAGE}
-      aws_stage: ${env:AWS_STAGE}
+      ETHEREUM_PROVIDER_URL: ${env:ETHEREUM_PROVIDER_URL}
+      CANISTER_ID: ${env:CANISTER_ID}
+      QUEUE_URL: ${env:QUEUE_URL}
+      ETHEREUM_CONTRACT: ${env:ETHEREUM_CONTRACT}
+      KMS_KEY_ID: ${env:KMS_KEY_ID}
+      KMS_KEY_KEY: ${env:KMS_PUBLIC_KEY}
+      STAGE: ${env:STAGE}
+      AWS_STAGE: ${env:AWS_STAGE}
 
 plugins:
   - serverless-webpack
@@ -142,7 +141,7 @@ resources:
     EthereumTxWithdrawQueue:
       Type: "AWS::SQS::Queue"
       Properties:
-        QueueName: ${self:custom.resourcePrefix}EthereumTxWithdrawQueue.fifo
+        QueueName: ${self:custom.resourcePrefix}EthereumTxWithdrawQueue-dev-west-2.fifo
         ContentBasedDeduplication: true
         FifoQueue: true
         DelaySeconds: 30
@@ -156,5 +155,5 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         FifoQueue: true
-        QueueName: ${self:custom.resourcePrefix}EthereumTxWithdrawDLQ.fifo
+        QueueName: ${self:custom.resourcePrefix}EthereumTxWithdrawDLQ-dev-west-2.fifo
         MessageRetentionPeriod: 1209600 # 14 days

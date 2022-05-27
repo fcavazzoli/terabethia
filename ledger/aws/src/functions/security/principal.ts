@@ -3,10 +3,10 @@ import {
   formatJSONResponse,
 } from '@/libs/apiGateway';
 import { requireEnv } from '@/libs/utils';
-import {
-  KMSClient,
-  GetPublicKeyCommand,
-} from '@aws-sdk/client-kms';
+// import {
+//   KMSClient,
+//   GetPublicKeyCommand,
+// } from '@aws-sdk/client-kms';
 import { Principal } from '@dfinity/principal';
 import { Secp256k1PublicKey } from '@dfinity/identity';
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
@@ -31,27 +31,27 @@ function publicKeyFromAsn1(buf: Buffer): Buffer {
   return Buffer.from(value.valueBlock.valueHex);
 }
 
-const kms = new KMSClient({});
+// const kms = new KMSClient({});
 
-export const main: APIGatewayProxyHandlerV2 = async () => {
-  const command = new GetPublicKeyCommand({ KeyId: envs.KMS_KEY_ID });
-  const res = await kms.send(command);
+// export const main: APIGatewayProxyHandlerV2 = async () => {
+//   const command = new GetPublicKeyCommand({ KeyId: envs.KMS_KEY_ID });
+//   const res = await kms.send(command);
 
-  if (!res.PublicKey) {
-    return {
-      statusCode: 500,
-      body: 'No public key.',
-    };
-  }
+//   if (!res.PublicKey) {
+//     return {
+//       statusCode: 500,
+//       body: 'No public key.',
+//     };
+//   }
 
-  const buffer = publicKeyFromAsn1(Buffer.from(res.PublicKey));
-  const publicKey = Secp256k1PublicKey.fromRaw(buffer);
-  const principal = Principal.selfAuthenticating(new Uint8Array(publicKey.toDer()));
+//   const buffer = publicKeyFromAsn1(Buffer.from(res.PublicKey));
+//   const publicKey = Secp256k1PublicKey.fromRaw(buffer);
+//   const principal = Principal.selfAuthenticating(new Uint8Array(publicKey.toDer()));
 
-  // this is public key which we set in our lambda env
-  console.log('b64', buffer.toString('base64'));
+//   // this is public key which we set in our lambda env
+//   console.log('b64', buffer.toString('base64'));
 
-  return formatJSONResponse({
-    principalId: principal.toText(),
-  });
-};
+//   return formatJSONResponse({
+//     principalId: principal.toText(),
+//   });
+// };
