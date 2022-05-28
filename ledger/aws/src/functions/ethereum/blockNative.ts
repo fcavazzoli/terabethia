@@ -11,7 +11,6 @@ import {
   SendMessageCommand,
 } from '@aws-sdk/client-sqs';
 import schema from './schema_json.json';
-import { env } from 'process';
 
 const envs = requireEnv(['QUEUE_URL']);
 
@@ -28,7 +27,6 @@ export const blockNativeEventHook: ValidatedEventAPIGatewayProxyEvent<
   }
 
   try {
-    console.log('queue', envs.QUEUE_URL)
     await sqsClient.send(new SendMessageCommand({
       QueueUrl: envs.QUEUE_URL,
       MessageBody: JSON.stringify(event.body),

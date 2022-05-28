@@ -12,8 +12,6 @@ import EthProxyService, {
   RemoveClaimableResponse,
 } from './idls/eth_proxy/eth.d';
 
-export { KMSIdentity } from './kms';
-
 export interface ActorParams {
   host: string;
   canisterId: string;

@@ -36,9 +36,6 @@ custom:
       - prd
       - dev
 
-  # serverless-iam-roles-per-function:
-  #   defaultInherit: true
-
   domain:
     dev: ledger-dev.psychedelic.ooo
     prd: ledger.psychedelic.ooo
@@ -105,8 +102,14 @@ resources:
         FifoQueue: true
         DelaySeconds: 30
         VisibilityTimeout: 300 # 5 minutes
-        # RedrivePolicy:
-        #   maxReceiveCount: 3
-        #   deadLetterTargetArn: !GetAtt
-        #     - EthereumTxWithdrawDLQ
-        #     - Arn
+        RedrivePolicy:
+          maxReceiveCount: 3
+          deadLetterTargetArn: !GetAtt
+            - EthereumTxWithdrawDLQ
+            - Arn
+    EthereumTxWithdrawDLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        FifoQueue: true
+        QueueName: ${self:custom.resourcePrefix}EthereumTxWithdrawDLQ-dev-west-2.fifo
+        MessageRetentionPeriod: 1209600 # 14 days

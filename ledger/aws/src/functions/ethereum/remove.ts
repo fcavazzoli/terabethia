@@ -1,14 +1,12 @@
 import 'source-map-support/register';
 
 import { ethers } from 'ethers';
-import { EthProxy, KMSIdentity } from '@/libs/dfinity';
+import { EthProxy } from '@/libs/dfinity';
 import { Principal } from '@dfinity/principal';
 import { BlockNativePayload } from '@/libs/blocknative';
 import { requireEnv, sqsHandler } from '@/libs/utils';
 
-import payload from './mock.json';
-// import { KMSClient } from '@aws-sdk/client-kms';
-import { Secp256k1KeyIdentity, Secp256k1PublicKey } from '@dfinity/identity';
+import { Secp256k1KeyIdentity } from '@dfinity/identity';
 
 const envs = requireEnv([
   'ETHEREUM_PROVIDER_URL',
