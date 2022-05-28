@@ -13,8 +13,8 @@ fn get_all(eth_address: EthereumAddr) -> Vec<ClaimableMessage> {
     STATE.with(|s| s.get_claimable_messages(eth_address))
 }
 
-#[update(name = "remove", guard = "is_authorized")]
-#[candid_method(update, rename = "remove")]
-fn remove(eth_address: EthereumAddr, amount: Nat) -> Result<(), String> {
+#[update(name = "remove_claimable", guard = "is_authorized")]
+#[candid_method(update, rename = "remove_claimable")]
+fn remove_claimable(eth_address: EthereumAddr, amount: Nat) -> Result<(), String> {
     STATE.with(|s| s.remove_claimable_message(eth_address, amount.clone()))
 }

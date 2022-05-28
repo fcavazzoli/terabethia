@@ -1,6 +1,6 @@
 type Result = variant { Ok : nat; Err : TxError };
 type Result_1 = variant { Ok : vec record { text; nat }; Err : text };
-type Result_2 = variant { Ok bool; Err : text };
+type Result_2 = variant { Ok : bool; Err : text };
 type TxError = variant {
   InsufficientAllowance;
   InsufficientBalance;
@@ -13,15 +13,15 @@ type TxError = variant {
   AmountTooSmall;
 };
 type ClaimableAssets = record {
-  owner : principal,
-  msg_hash : text,
-  msg_key: vec nat8,
-  token: principal,
-  amount: nat,
+  owner : principal;
+  msg_hash : text;
+  msg_key: vec nat8;
+  token: principal;
+  amount: nat;
 };
 service : {
   burn : (principal, principal, nat) -> (Result);
-  claimable_get_all : (principal) -> (vec : ClaimableAssets);
+  claimable_get_all : (principal) -> (vec ClaimableAssets );
   get_all_token_balance : () -> (Result_1);
   get_balance : (principal) -> (opt nat);
   handle_message : (principal, nat, vec nat) -> (Result);
