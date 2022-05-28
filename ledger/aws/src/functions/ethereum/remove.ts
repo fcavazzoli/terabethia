@@ -8,35 +8,25 @@ import { requireEnv, sqsHandler } from '@/libs/utils';
 
 import payload from './mock.json';
 // import { KMSClient } from '@aws-sdk/client-kms';
-import { Secp256k1PublicKey } from '@dfinity/identity';
+import { Secp256k1KeyIdentity, Secp256k1PublicKey } from '@dfinity/identity';
 
 const envs = requireEnv([
   'ETHEREUM_PROVIDER_URL',
   'ETH_PROXY_CANISTER_ID',
   'QUEUE_URL',
   'ETHEREUM_CONTRACT',
-  'KMS_KEY_ID',
-  'KMS_PUBLIC_KEY',
+  'IC_IDENTITY'
 ]);
 
 // EthProxy ETH
 const provider = new ethers.providers.StaticJsonRpcProvider(envs.ETHEREUM_PROVIDER_URL);
 
-// EthProxy IC with KMS
-// const kms = new KMSClient({});
-const publicKey = Secp256k1PublicKey.fromRaw(Buffer.from(envs.KMS_PUBLIC_KEY, 'base64'));
-// const identity = new KMSIdentity(publicKey, kms, envs.KMS_KEY_ID);
-// const eth_proxy = new EthProxy(envs.ETH_PROXY_CANISTER_ID, identity);
 
-
-// asdf
-//
 export const handleWithdraw = async (message: BlockNativePayload) => {
   if (message.status !== 'confirmed') {
     throw new Error('transaction is not confirmed yet');
   }
   const { hash } = message;
-  console.log(hash)
   const { params: payload } = message.contractCall;
 
   // we get the tx receipt 
@@ -51,9 +41,9 @@ export const handleWithdraw = async (message: BlockNativePayload) => {
     payload
   };
 
-  console.log(transactionMetadata);
-
-  // ic
+  // ic call
+  const identity = Secp256k1KeyIdentity.fromJSON(envs.IC_IDENTITY)
+  const eth_proxy = new EthProxy(envs.ETH_PROXY_CANISTER_ID, identity);
 
   // fromAddress is hex string prefixed with 0x
   const fromAddresPid = Principal.fromHex(transactionMetadata.ethAddress.slice(2));
@@ -63,7 +53,7 @@ export const handleWithdraw = async (message: BlockNativePayload) => {
 
 
   // send message to the proxy
-  // await eth_proxy.removeClaimable(fromAddresPid, amountAsNat);
+  await eth_proxy.removeClaimable(fromAddresPid, amountAsNat);
 };
 
 export const main = sqsHandler<BlockNativePayload>(handleWithdraw, envs.QUEUE_URL, undefined, 1);

@@ -60,7 +60,6 @@ custom:
 plugins:
   - serverless-webpack
   - serverless-stack-termination-protection
-  # - serverless-iam-roles-per-function
   - serverless-prune-plugin
   - serverless-offline-sns
   - serverless-offline
@@ -79,6 +78,11 @@ functions:
     handler: src/functions/ethereum/blockNative.main
     environment:
       QUEUE_URL: !Ref EthereumTxWithdrawQueue
+      ETHEREUM_PROVIDER_URL: ${env:ETHEREUM_PROVIDER_URL}
+      CANISTER_ID: ${env:CANISTER_ID}
+      ETHEREUM_CONTRACT: ${env:ETHEREUM_CONTRACT}
+      ETH_PROXY_CANISTER_ID: ${env:ETH_PROXY_CANISTER_ID}
+      IC_IDENTITY: ${env:IC_IDENTITY}
     events:
       - http:
           method: POST
