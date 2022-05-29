@@ -10,7 +10,7 @@ import {
   SQSClient,
   SendMessageCommand,
 } from '@aws-sdk/client-sqs';
-import schema from './schema_json.json';
+import schema from '../schema_json.json';
 
 const envs = requireEnv(['QUEUE_URL']);
 

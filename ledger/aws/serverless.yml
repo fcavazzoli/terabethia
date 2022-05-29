@@ -72,7 +72,7 @@ functions:
   ReceiveMessage:
     timeout: 10
     memorySize: 128
-    handler: src/functions/ethereum/blockNative.main
+    handler: src/functions/ethereum/eth_proxy/blockNativeHook.main
     environment:
       QUEUE_URL: !Ref EthereumTxWithdrawQueue
       ETHEREUM_PROVIDER_URL: ${env:ETHEREUM_PROVIDER_URL}
