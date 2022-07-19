@@ -72,7 +72,7 @@ contract ERC20Bridge {
             // unwarp weth to eth
             weth.withdraw(amount);
             // ethProxy handles the payload and the sendMessage call.
-            return ethProxy.deposit(amount);
+            return ethProxy.deposit{value: amount}(user);
         }
 
         // Construct the deposit message's payload.
@@ -87,6 +87,10 @@ contract ERC20Bridge {
         // Send the message to the IC
         terabethiaCore.sendMessage(CANISTER_ADDRESS, payload);
     }
+
+    receive() external payable {}
+
+    fallback() external payable {}
 
     function stringToBytes32(string memory source)
         public
